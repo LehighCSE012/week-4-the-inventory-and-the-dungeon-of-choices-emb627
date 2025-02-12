@@ -46,7 +46,7 @@ def acquire_item(inventory, item):
         print("You found nothing.")
         return inventory
     else:
-        inventory.append(item) #Mandatory operation 1: "Append" used to add single item to inventory
+        inventory.append(item) #Operation 1: "Append" used to add single item to inventory
         print(f"You acquired a {item}!")
         return inventory
 
@@ -55,13 +55,14 @@ def display_inventory(inventory):
     if inventory == [ ]:
         print("Your inventory is empty.")
     else:
-        for index, value in enumerate(inventory):
-            print(f"Your inventory: {index+1}. {value}")
+        print("Your inventory:") #Prints header once
+        for index, item in enumerate(inventory):
+            print(f"{index + 1}. {item}") #Prints numbered list of each item on a newline
 
 def use_item(inventory):
     """Allows the player to try and fail to use the spell book, then discards it from the inventory """
-    if "spell book" in inventory: #Mandatory operation 2: I used "in" to check if spell book was an item within the inventory
-        inventory.remove("spell book") #Mandatory operation 3: I used "remove" to discard the spell book item from the inventory after it was used
+    if "spell book" in inventory: #Operation 2:"In" checks if spell book is within the inventory
+        inventory.remove("spell book") #Operation 3: "Remove" discards spell book from inventory
         print("You opened the spell book but could not read its language, so you discarded it.")
         return inventory
 
@@ -84,7 +85,10 @@ def combat_encounter(player_health, monster_health, has_treasure):
         return False
     if monster_health <= 0:
         print("You defeated the monster!")
-        return bool
+        if has_treasure:
+            return True
+        else:
+            return False
 
 def check_for_treasure(has_treasure):
     """Checking if the monster had treasure"""
@@ -95,7 +99,7 @@ def check_for_treasure(has_treasure):
 
 def enter_dungeon(player_health, inventory, dungeon_rooms):
     """Takes player through each of the dungeon rooms"""
-    for room in dungeon_rooms: 
+    for room in dungeon_rooms:
         print(f"You enter a {room[0]}!")
         if room[1] is not None:
             acquire_item(inventory, room[1])
@@ -107,28 +111,28 @@ def enter_dungeon(player_health, inventory, dungeon_rooms):
                 success = random.choice([True, False])
                 if success:
                     print(f"{room[3][0]}")
+                    player_health = player_health + room[3][2]
+                    if player_health < 0:
+                        player_health = 0
+                        print("You are barely alive!")
                 else:
                     print(f"{room[3][1]}")
                     player_health = player_health + room[3][2]
                     if player_health <= 0:
                         print("Oh no, you have died!")
-                        return player_health, inventory
-                    else:
-                        continue
+                    return player_health, inventory
             else: #If the player chooses to bypass the trap
                 success = random.choice([True, False, False])
                 if success:
                     print("You gained nothing, move on.")
                     continue
-                elif not success:
+                else:
                     print(f"{room[3][1]}")
                     player_health = player_health + room[3][2]
                     if player_health <= 0:
                         print("Oh no, you have died!")
-                        return player_health, inventory
-                    else:
-                        continue
-            display_inventory(inventory)
+                    return player_health, inventory
+                display_inventory(inventory)
 
         elif room[2] == "puzzle": #Path if the player enters the chest puzzle room
             print("You encounter a puzzle!")
@@ -137,21 +141,22 @@ def enter_dungeon(player_health, inventory, dungeon_rooms):
                 success = random.choice([True, False])
                 if success:
                     print(f"{room[3][0]}")
+                    player_health = player_health + room[3][2]
+                    if player_health < 0:
+                        player_health = 0
+                        print("You are barely alive!")
                 else:
                     print(f"{room[3][1]}")
                     player_health = player_health + room[3][2]
                     if player_health <= 0:
                         print("Oh no, you have died!")
                         return player_health, inventory
-                    else:
-                        continue
-                    
             else: #If the player chooses to skip the puzzle
                 success = random.choice([True, False, False])
                 if success:
                     print("You gained nothing, move on.")
                     continue
-                elif not success:
+                else:
                     print(f"{room[3][1]}")
                     player_health = player_health + room[3][2]
                     if player_health <= 0:
@@ -162,7 +167,6 @@ def enter_dungeon(player_health, inventory, dungeon_rooms):
             display_inventory(inventory)   
 
         else: #Path if the player enters the library with no challenge
-            use_item(inventory, "spell book")
             print("There doesn't seem to be a challenge in this room. You move on.")
             display_inventory(inventory)
     display_player_status
