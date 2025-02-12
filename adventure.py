@@ -102,6 +102,7 @@ def enter_dungeon(player_health, inventory, dungeon_rooms):
     for room in dungeon_rooms:
         print(f"You enter a {room[0]}!")
         if room[1] is not None:
+            print(f"You found a {room[1]} in the room.")
             acquire_item(inventory, room[1])
 
         if room[2] == "trap": #Path if the player enters the lava trap room
@@ -125,7 +126,6 @@ def enter_dungeon(player_health, inventory, dungeon_rooms):
                 success = random.choice([True, False, False])
                 if success:
                     print("You gained nothing, move on.")
-                    continue
                 else:
                     print(f"{room[3][1]}")
                     player_health = player_health + room[3][2]
@@ -155,21 +155,18 @@ def enter_dungeon(player_health, inventory, dungeon_rooms):
                 success = random.choice([True, False, False])
                 if success:
                     print("You gained nothing, move on.")
-                    continue
                 else:
                     print(f"{room[3][1]}")
                     player_health = player_health + room[3][2]
                     if player_health <= 0:
                         print("Oh no, you have died!")
                         return player_health, inventory
-                    else:
-                        continue
-            display_inventory(inventory)   
+            display_inventory(inventory)
 
         else: #Path if the player enters the library with no challenge
             print("There doesn't seem to be a challenge in this room. You move on.")
             display_inventory(inventory)
-    display_player_status
+    display_player_status(player_health)
     return player_health, inventory
 
 def main():
@@ -179,12 +176,14 @@ def main():
     has_treasure = False
     inventory = [ ] #Inventory initialized to empty
 
-    dungeon_rooms = [("A room filled with lava", None, "trap", ("You avoided the lava!", "You fell into the lava!", -10)),
+    dungeon_rooms = [("A room filled with lava", None, "trap",
+                      ("You avoided the lava!", "You fell into the lava!", -10)),
                      ("A magnificent library", "spell book", "none", None),
-                     ("A dark room with portraits and locked chest", ["gold coins", "armor"], "puzzle", ("You unlocked the chest!", "The chest remains locked.", -5))]
+                     ("A dark room with portraits and locked chest", "pile of gold coins", "puzzle",
+                      ("You unlocked the chest!", "The chest remains locked.", -5))]
 
-    '''Demonstrating tuple immutability: The following line will cause a TypeError
-    because tuples cannot be modified after they are created'''
+    #Demonstrating tuple immutability: The following line will cause a TypeError
+    #because tuples cannot be modified after they are created
     dungeon_rooms[1][1] = "magic potion" 
 
     has_treasure = random.choice([True, False]) # Randomly assigns treasure
