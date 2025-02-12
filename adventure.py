@@ -45,16 +45,9 @@ def acquire_item(inventory, item):
     if not item:
         print("You found nothing.")
         return inventory
-    elif isinstance(item, list):
-        inventory.extend(item) #Mandatory operation 1: I used "extend" to add a list of items to the inventory at once
-        if len(item) == 2:
-            item_string = f"{item[0]} and {item[1]}" #And logic for two items
-        else:
-            item_string = f"{','.join(item[:-1])}{',' if len(item) > 2 else ''} and {item[-1]}" #Oxford comma logic
-        print(f"You acquired: {item_string}!")
     else:
-        inventory.append(item) #Mandatory operation 2: I use "append" to add a single item to the inventory list
-        print(f"You acquired a {item}!")  
+        inventory.append(item) #Mandatory operation 1: "Append" used to add single item to inventory
+        print(f"You acquired a {item}!")
         return inventory
 
 def display_inventory(inventory):
@@ -63,12 +56,12 @@ def display_inventory(inventory):
         print("Your inventory is empty.")
     else:
         for index, value in enumerate(inventory):
-            print(f"{index+1}. {value}")
+            print(f"Your inventory: {index+1}. {value}")
 
-def use_item(inventory, item):
+def use_item(inventory):
     """Allows the player to try and fail to use the spell book, then discards it from the inventory """
-    if "spell book" in inventory: #Mandatory operation 3: I used "in" to check if spell book was an item within the inventory
-        inventory.remove("spell book") #Mandatory operation 4: I used "remove" to discard the spell book item from the inventory after it was used
+    if "spell book" in inventory: #Mandatory operation 2: I used "in" to check if spell book was an item within the inventory
+        inventory.remove("spell book") #Mandatory operation 3: I used "remove" to discard the spell book item from the inventory after it was used
         print("You opened the spell book but could not read its language, so you discarded it.")
         return inventory
 
@@ -89,12 +82,9 @@ def combat_encounter(player_health, monster_health, has_treasure):
     if player_health <= 0:
         print("Game Over!")
         return False
-    elif monster_health <= 0:
+    if monster_health <= 0:
         print("You defeated the monster!")
-        if has_treasure:
-            return True
-        else:
-            return False
+        return bool
 
 def check_for_treasure(has_treasure):
     """Checking if the monster had treasure"""
@@ -111,6 +101,7 @@ def enter_dungeon(player_health, inventory, dungeon_rooms):
             acquire_item(inventory, room[1])
 
         if room[2] == "trap": #Path if the player enters the lava trap room
+            print("You see a potential trap!")
             trap_choice = input("Disarm or bypass the trap?")
             if trap_choice == "disarm": #If the player attempts to disarm the trap
                 success = random.choice([True, False])
@@ -140,6 +131,7 @@ def enter_dungeon(player_health, inventory, dungeon_rooms):
             display_inventory(inventory)
 
         elif room[2] == "puzzle": #Path if the player enters the chest puzzle room
+            print("You encounter a puzzle!")
             puzzle_choice = input("Solve or skip?")
             if puzzle_choice == "solve": #Path if the player attempts to solve the puzzle
                 success = random.choice([True, False])
@@ -171,8 +163,9 @@ def enter_dungeon(player_health, inventory, dungeon_rooms):
 
         else: #Path if the player enters the library with no challenge
             use_item(inventory, "spell book")
-            print("There is no challenge in this room. Move on.")
+            print("There doesn't seem to be a challenge in this room. You move on.")
             display_inventory(inventory)
+    display_player_status
     return player_health, inventory
 
 def main():
@@ -187,8 +180,8 @@ def main():
                      ("A dark room with portraits and locked chest", ["gold coins", "armor"], "puzzle", ("You unlocked the chest!", "The chest remains locked.", -5))]
 
     '''Demonstrating tuple immutability: The following line will cause a TypeError
-    because tuples cannot be modified after they are created:
-    dungeon_rooms[1][1] = "magic potion" '''
+    because tuples cannot be modified after they are created'''
+    dungeon_rooms[1][1] = "magic potion" 
 
     has_treasure = random.choice([True, False]) # Randomly assigns treasure
 
