@@ -184,7 +184,7 @@ def main():
 
     #Demonstrating tuple immutability: The following line will cause a TypeError
     #because tuples cannot be modified after they are created
-    dungeon_rooms[1][1] = "magic potion" 
+    dungeon_rooms[1][1] = "magic potion"
 
     has_treasure = random.choice([True, False]) # Randomly assigns treasure
 
@@ -195,7 +195,8 @@ def main():
     check_for_treasure(treasure_obtained_in_combat) # Or has_treasure, depending on logic
 
     if player_health > 0:
-        player_health, inventory = enter_dungeon(player_health, inventory, dungeon_rooms) #Unpacking tuple of enter_dungeon returns
-   
+        player_health, inventory = enter_dungeon(player_health, inventory, dungeon_rooms)
+        #Unpacking tuple of enter_dungeon return statements if the player is still alive
+
 if __name__ == "__main__":
     main()
