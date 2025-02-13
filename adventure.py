@@ -44,11 +44,10 @@ def acquire_item(inventory, item):
     """Allows for items to be added to the inventory, whether single items or lists of items"""
     if not item:
         print("You found nothing.")
-        return inventory
     else:
         inventory.append(item) #Operation 1: "Append" used to add single item to inventory
         print(f"You acquired a {item}!")
-        return inventory
+    return inventory
 
 def display_inventory(inventory):
     """Shows the player what is in their inventory or if it is empty"""
@@ -60,11 +59,11 @@ def display_inventory(inventory):
             print(f"{index + 1}. {item}") #Prints numbered list of each item on a newline
 
 def use_item(inventory):
-    """Allows the player to try and fail to use the spell book, then discards it from the inventory """
+    """Allows player to try and fail to use the spell book, then discards it from the inventory"""
     if "spell book" in inventory: #Operation 2:"In" checks if spell book is within the inventory
         inventory.remove("spell book") #Operation 3: "Remove" discards spell book from inventory
         print("You opened the spell book but could not read its language, so you discarded it.")
-        return inventory
+    return inventory
 
 def combat_encounter(player_health, monster_health, has_treasure):
     """Describes combat encounters: player and then monster take turns attacking
